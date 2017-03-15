@@ -1,0 +1,403 @@
+\documentclass[11pt]{article}
+
+\usepackage[%
+  papersize={160mm,120mm},
+  bottom=2mm,
+  top=2mm,
+  textwidth=150mm,
+  textheight=115mm,
+  hcentering,
+]{geometry}
+
+% Mathtools with AMS Math
+\usepackage{mathtools}
+
+% Use TeX Gyre Schola font family with Fourier math fonts
+\usepackage[T1]{fontenc}
+\usepackage{tgschola}
+\usepackage{fouriernc}
+\usepackage{parskip}
+\setlength{\parskip}{0.25em}
+\renewcommand{\baselinestretch}{0.9}
+
+\usepackage{enumitem}
+\setlist{itemsep=.05em,parsep=.25em}
+
+\usepackage{graphicx}
+\usepackage{amsmath, caption, fancybox, soul,xspace}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{hyperref}
+\hypersetup{colorlinks,linkcolor=,urlcolor=blue}
+
+\usepackage{axodraw2}
+
+\usepackage{fancyvrb}
+
+\usepackage{minibox}
+
+\input{include/commands}
+
+\newcommand{\refx}[1]{\href{1}{\scriptsize #1}}
+\newcommand{\titlebox}[1]{\centerline{\shadowbox{\begin{Bcenter}{\Large #1}\end{Bcenter}}}}
+\newcommand{\titleboxx}[2]{\centerline{\shadowbox{\begin{Bcenter}\Large #1\vspace{1mm}\\ {\color{white}q}#2{\color{white}q}\end{Bcenter}}}}
+
+%\setmonofont{Go-Mono}
+\definecolor{textcolor}{RGB}{60,60,60}
+
+\begin{document}
+
+\color{textcolor}
+
+\begin{center}
+  \mbox{}
+  \vfill
+  {\LARGE \bf \scshape Introduction \\ \Large to \LARGE \\ Differential Equations \\ \Large for \LARGE \\ Feynman Integrals \\}
+  \vfill
+  {\large Oleksandr Gituliar} \\ \href{mailto:oleksandr@gituliar.net}{oleksandr@gituliar.net}
+  \vfill
+  \includegraphics[height=1.2cm]{img/logo_uhh}\\
+  II. Institut f\"ur Theoretische Physik \\ Universit\"at Hamburg
+  \vfill
+  {Computer Algebra in Particle Physics 2017 \\ DESY (Hamburg)}
+  \vfill
+  \mbox{}
+\end{center}
+\newpage
+ 
+
+\titlebox{Plan for Today}
+\begin{enumerate}
+  \item Methods for caluclating Feynman integrals (20')
+  \begin{itemize}
+    \item Integration by Parts (IBP)
+    \item Method of Differential Equations (MDE)
+  \end{itemize}
+  \item MDE \& Solution Techniques (30')
+  \begin{itemize}
+    \item ordinary vs partial
+    \item epsilon form
+    \item boundary conditions
+  \end{itemize}
+  \item Examples (30')
+  \item MDE \& Limitations (10')
+\end{enumerate}
+\newpage
+
+\titlebox{I.1 Feynman Integrals Calculus}
+\bi \item Feynman/Schwinger parameters
+          \bi \item \hyperint and hyperlogarithms
+              \ei
+    \item Mellin-Barnes (MB) representation
+          \bi \item popular for massive diagrams
+              \ei
+    \item Integration-by-parts (IBP) reduction
+          \bi \item universal and easy-to-use
+              \item \fire, \litered, \reduze
+              \ei
+    \item Method of differential equations (MDE)
+          \bi \item huge potential
+              \ei
+    \ei
+\newpage
+
+\titlebox{I.2 Method of Differential Equations}
+\bn
+  \item Find IBP rules
+    \bi
+      \item highly automated
+      \item \fire, \litered, \reduze
+    \ei
+  \item Derive ODE
+  \item Find $\eps$-form
+    \bi
+      \item already very powerful (less-understood than IBP)
+      \item Lee method: \fuchsia (2016), \texttt{epsilon} (2017)
+      \item other:
+    \ei
+  \item Solve ODE
+  \item Find constants of integration
+    \bi
+      \item depends on the problem
+      \item may be the most complex task
+    \ei
+\en
+\newpage
+
+\titleboxx{Example I}{One-Loop Massive Self-Energy}
+%{\small
+%{\bf Scalar integrals} are the most {\em convenient} to compute.
+%Therefore, we assume that integrals with vector or spinor indices (e.g. amplitudes) are already expressed as a combination of scalar integrals and constant objects which reveal the index structure.}
+\bi
+  \item {\bf Functions}: {\em from vectors to scalars}
+$$ \raisebox{-28pt}{
+     \SetScale{0.5}
+     \begin{axopicture}(200,120)
+       \SetOffset(0,10)
+       \DoubleArc[arrow](100,50)(40,0,180){2}
+       \Text(100,105){$l$}
+       \DoubleArc[arrow](100,50)(40,180,360){2}
+       \Text(100,-5){$l-p$}
+       \Text(30,70){$p$}
+       \Gluon(0,50)(60,50){5}{4}
+       \Vertex(60,50){2}
+       \Text(170,70){$p$}
+       \Gluon(140,50)(200,50){5}{4}
+       \Vertex(140,50){2}
+     \end{axopicture}}
+   =
+ \Pi^{\mu\nu}_{ab}({p^2},m)
+   =
+   \delta_{ab} \x \left(p^\mu p^\nu - g^{\mu\nu} p^2\right) \; \Pi({p^2},m)
+$$
+\vspace{-3mm}
+$$
+   \Pi(\green{p^2},m)
+   =
+   \int \D^n l \; F(p,l,m)
+$$
+  \item {\bf Arguments}: {\em from vectors to scalars}
+        $$ F(p,l,m) \;\to\; F(\blue{l^2},\; \blue{l \!\cdot\! p}, \; \green{p^2}, \; m) $$
+  \item In general, the number of \blue{scalar integration variables} is given by
+        $$N(L,E) = \frac{L\,(L+1)}{2} + L\,E \quad \sim \quad \mathcal{O}(L^2) \;\;\leftarrow\;\; \parbox{50mm}{another source of growing complexity at higher orders}$$
+        where $E$ -- number of {\em external momenta}, $L$ -- number of {\em loop momenta}
+  \bi
+    \item 1-loop propagator: $\blue{N(1,1)=2}$
+    \item 4-loop propagator: $N(4,1)=14$ (ask Jos Vermaseren about details)
+  \ei
+\ei
+\newpage
+
+
+\bi
+  \item The problem contains two denominators 
+        $$\quad D_1 = l^2-m^2 \quad \quad D_2 = (l-p)^2-m^2  $$
+        which map into our integration invariants in a unique way 
+        $$ F(p,l,m) \;\to\; F(\blue{l^2},\; \blue{l \!\cdot\! p}, \; p^2, \; m) \to F(\blue{D_1}, \blue{D_2}, p^2,m) $$
+  \item One integral family\footnote{since now we do not write $p^2$ and $m$ explicitly}
+        $$F(n_1, n_2) = \int \D^n l \frac{1}{D_1^{n_1} D_2^{n_2}}$$
+\ei
+
+\vspace{4mm}
+\begin{Verbatim}[fontsize=\small,frame=lines, label=\fbox{Mathematica}]
+
+  <<LiteRed`
+
+  SetDim[n];
+  Declare[{m2}, Number, {l,p}, Vector];
+  NewBasis[$b, {sp[l]-m2, sp[l-p]-m2}, {l}];
+
+\end{Verbatim}
+\newpage
+
+
+\titleboxx{Example I}{Master Integrals}
+\begin{Verbatim}[fontsize=\small,frame=lines, label=\fbox{Mathematica}]
+
+  AnalyzeSectors[$b];
+  FindSymmetries[$b];
+  SolvejSectors /@ UniqueSectors[$b]
+
+  MIs[$b]
+
+  > {j[$b,0,1], j[$b,1,1]}
+\end{Verbatim}
+\bi
+  \item We obtain two master integrals
+        $$F_1 = F(0,1) \qquad F_2 = F(1,1)$$
+  \item Any other integral is a linear combination of only these two, e.g.,
+        $$F(2,1) = \frac{n-2}{2 m^2 (p^2-4m^2)} F_1 + \frac{n-3}{p^2-4m^2} F_2$$
+\ei
+\newpage
+
+
+\titleboxx{Example I}{Differential Equations}
+
+\vs
+\begin{Verbatim}[fontsize=\small,frame=lines, label=\fbox{Mathematica}]
+
+$ds = Dinv[#,sp[p,p]]& /@ MIs[$b] // IBPReduce;
+$ode = Coefficient[#, MIs[$b]]& /@ $ds;
+\end{Verbatim}
+\vs
+
+\bi
+  \item This code produces a system of differential equations
+  $$
+    \begin{aligned}
+     \frac{\D F_1}{\D p^2} & = 0
+     \\
+     \frac{\D F_2}{\D p^2} & = \frac{2-2\eps}{s\x(s-4m^2)} F_1 + \frac{2m^2-\eps s}{s\x(s-4m^2)} F_2
+    \end{aligned}
+  $$
+  where $s=p^2$ and $n=4-2\eps$
+\ei
+\vs
+
+This system is simple and we could solve it right away using {\em <your favourite>} method.
+Today, I want to demonstrate you how this and many other systems can be solved throug using their {\bf $\boldsymbol{\eps}$-form}.
+As you will see this is a highly automated task.
+
+\vs
+\fbox{Exercise 1a.} \\
+Derive another system of differential equations, but this time in~$m^2$. (Hint: instead of \code{Dinv} use \code{Fromj}, \code{D}, and \code{Toj} functions ).
+\newpage
+
+
+\titleboxx{Example I}{$\eps$-form}
+\newpage
+
+
+\titlebox{Holonomic Functions}
+A function $f=f(x)$ is called {\em holonomic} if there exist polynomials $a_n(x),\x\ldots,\x a_0(x)$ such that
+\be
+  \label{eq:ode}
+  a_n(x) f^{(n)} - a_{n-1}(x)\x f^{(n-1)} - \ldots - a_0(x) \x f = 0
+\ee
+holds for all $x$. Hence, the holonomic function is uniquely defined by
+\bi
+  \item the differential equation
+  \item a number of initial values $f(x_0),\x f'(x_0),\x \ldots,\x f^{(n-1)}(x_0)$
+\ei
+
+\vs
+\underline{Examples} of holonomic functions:
+\bi
+  \item {\em all algebraic functions}
+  \item \fbox{\em Generalized Hypergeometric functions}
+    \bi
+      \item {\em polylogarythms}
+      \item {\em Elliptic functions}
+    \ei
+  \item {\em Bessel functions}
+  \item {\em Airy functions}
+  \item {\em Legendre and Chebyshev polynomials}
+  \item {\em Heun functions}
+  \item and many others that have no name and no closed form
+\ei
+
+\vs\vs
+For more details, see the lecture by M.Kauers at CAPP 2011.
+\newpage
+
+\titlebox{Holonomic Functions}
+A function $f=f(x)$ is called {\em holonomic} if there exist polynomials $a_n(x),\x\ldots,\x a_0(x)$ such that
+$$
+  a_n(x) f^{(n)} - a_{n-1}(x)\x f^{(n-1)} - \ldots - a_0(x) \x f = 0
+$$
+holds for all $x$. Hence, the holonomic function is uniquely defined by
+\bi
+  \item the differential equation
+  \item a number of initial values $f(x_0),\x f'(x_0),\x \ldots,\x f^{(n-1)}(x_0)$
+\ei
+
+\vspace{1cm}
+\fbox{Conclusion}
+\vs
+\bn
+\item With the help of polynomials and differential equations we can define a large set of complicated functions which have no closed form and usually have a non-trivial integration representation.
+\item These functions appear in the Feynman integrals.
+\item In some situation it is much easier to solve ODE (than to directly integrate). \\
+      In the rest of my talk I will show you how to do that.
+\en
+\newpage
+
+\titlebox{Fuchsian Differential Equations}
+\newpage
+
+
+\titlebox{$n^{\text{th}}$-order ODE vs $n\times n$ system}
+
+We can easily rewrite a $n^{\text{th}}$-order linear ODE given by
+\be
+  \label{eq:ode}
+  y^{(n)} - a_1(x)\x y^{(n-1)} - \ldots - a_n(x) \x y = 0
+\ee
+as an $n\times n$ system of the form 
+\be \frac{\D \bar{y}}{\D x} = A(x) \x \bar{y} \ee
+where
+\be
+A(x) =
+\begin{bmatrix}
+  0 & 1 & \cdots & 0 & 0
+  \\
+  0 & 0 & \cdots & 0 & 0
+  \\
+  \vdots & \vdots & \ddots & \vdots & \vdots
+  \\
+  0 & 0 & \cdots & 0 & 1
+  \\
+  a_n(x) & a_{n-1}(x) & \cdots & a_2(x) & a_1(x)
+\end{bmatrix}
+\quad \text{and} \quad
+\bar{y} =
+\begin{pmatrix}
+  y \\ y' \\ \vdots \\ y^{(n-2)} \\ y^{(n-1)}
+ \end{pmatrix}
+\ee
+However, the inverse opperation is not as easy anymore.
+\newpage
+
+
+\titleboxx{Example II}{Expansion of Hypergeometric Functions}
+The Generalized Hypergeometric Function
+\be
+ _{p+1}F_p
+\left(
+\begin{matrix}
+  a_1,\x a_2,\x \ldots,\x a_{p+1}
+  \\
+  b_1,\x b_2,\x \ldots,\x b_{p}
+\end{matrix}
+;\x x
+\right)
+=
+\prod_{i=1}^{p}\frac{\Gamma(b_i)}{\Gamma(a_i)\Gamma(b_i-a_i)}
+\int_0^1 \frac{t_i^{a_i-1} (1-t_i)^{b_i-a_i-1}}{(1-x\x t_1\ldots t_{p})^{a_{p+1}}} \D t_i
+\ee
+is a solution to the differential equation
+\be
+\left[
+ D \x (D+b_1-1)\x\cdots\x(D+b_p-1)\x - \x x\x(D+a_1)\x\cdots\x(D+a_{p+1})
+\right] \x y = 0
+\ee
+where
+$$D = x\frac{\D}{\D x}$$
+
+\vs
+\fbox{Exercise 2.}
+Using your favourite CAS write a routine which for a given Generalized Hypergeometric Function, defined by the list $\{a_1,\ldots,a_{p+1},b_1,\ldots,b_p\}$, it returns a corresponding ODE, defined by the list $\{a_1(x),\ldots,a_p(x)\}$, in accordance with notation of eq.~\eqref{eq:ode}.
+
+\newpage
+
+
+\titleboxx{Example III}{NLO real correction to $2\to 2$ in QCD}
+\newpage
+
+
+\titlebox{A Word of Advice}
+\bi
+  \item Before computing, first think of how to check your results
+  \item Read arXiv.org daily
+  \bi
+    \item subscribe to the mailing list
+    \item e-mail To: physics@arxiv.org, Subject: subscribe
+  \ei
+  \item Search with scholar.google.com
+  \item Do not be afraid to write e-mails
+  \item Discuss your ideas
+\ei
+\newpage
+
+\titlebox{Reading List}
+\bi \item {\em "Feynman Integral Calculus"} by V.~Smirnov
+    \item {\em "Lectures on Differential Equations for Feynman Integrals"} by J.~Henn
+    \item {\em "Formal Power Series and Linear Systems of Meromorphic Ordinary Differential Equations"} by W.~Balser
+    \item {\em "Computer Algebra in Particle Physics"} by S.~Weinzierl
+    \item {\em "Introduction to Loop Calculations"} by G.~Heinrich
+    \item {\em "Structure and Interpretation of Computer Programs"}\\by H.~Abelson and G.~Sussman with J.~Sussman
+    \ei
+\newpage
+
+\titlebox{Summary}
+
+\end{document}
