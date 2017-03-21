@@ -1,5 +1,4 @@
 \documentclass[11pt]{article}
-
 \usepackage[%
   papersize={160mm,120mm},
   bottom=2mm,
@@ -38,11 +37,20 @@
 \input{include/commands}
 
 \newcommand{\refx}[1]{\href{1}{\scriptsize #1}}
-\newcommand{\titlebox}[1]{\centerline{\shadowbox{\begin{Bcenter}{\Large #1}\end{Bcenter}}}}
-\newcommand{\titleboxx}[2]{\centerline{\shadowbox{\begin{Bcenter}\Large #1\vspace{1mm}\\ {\color{white}q}#2{\color{white}q}\end{Bcenter}}}}
+\newcommand{\titlebox}[1]{\centerline{\color{black}\shadowbox{\begin{Bcenter}{\Large \color{Blue} #1}\end{Bcenter}}}}
+\newcommand{\titleboxx}[2]{\centerline{\color{black}\shadowbox{\begin{Bcenter}\Large\color{black} #1\vspace{1mm}\\  {\color{white}q}{\color{black}#2}{\color{white}q}\end{Bcenter}}}}
+
+\newcommand{\bbox}[1]{\color{black}\boxed{{\color{Plum}#1}}}
 
 %\setmonofont{Go-Mono}
 \definecolor{textcolor}{RGB}{60,60,60}
+
+\newcommand{\spr}[2]{#1\!\cdot\!#2}
+
+\everymath{\color{Plum}}
+\everydisplay{\color{Plum}}
+
+\setlength{\parindent}{0mm}
 
 \begin{document}
 
@@ -123,7 +131,7 @@
 \en
 \newpage
 
-\titleboxx{Example I}{One-Loop Massive Self-Energy}
+\titleboxx{\Large Example I}{\Large \bf One-Loop Massive Self-Energy}
 %{\small
 %{\bf Scalar integrals} are the most {\em convenient} to compute.
 %Therefore, we assume that integrals with vector or spinor indices (e.g. amplitudes) are already expressed as a combination of scalar integrals and constant objects which reveal the index structure.}
@@ -158,7 +166,7 @@ $$
   \item {\bf Arguments}: {\em from vectors to scalars}
         $$ F(p,l,m) \;\to\; F(\blue{l^2},\; \blue{l \!\cdot\! p}, \; \green{p^2}, \; m) $$
   \item In general, the number of \blue{scalar integration variables} is given by
-        $$N(L,E) = \frac{L\,(L+1)}{2} + L\,E \quad \sim \quad \mathcal{O}(L^2) \;\;\leftarrow\;\; \parbox{50mm}{another source of growing complexity at higher orders}$$
+        $$N(L,E) = \frac{L\,(L+1)}{2} + L\,E \quad \sim \quad \mathcal{O}(L^2) \;\;\leftarrow\;\; \parbox{50mm}{another source of growing complexity at higher orders}$$%
         where $E$ -- number of {\em external momenta}, $L$ -- number of {\em loop momenta}
   \bi
     \item 1-loop propagator: $\blue{N(1,1)=2}$
@@ -168,12 +176,13 @@ $$
 \newpage
 
 
+\titleboxx{I.1}{\Large Integration-by-Parts Reduction}
 \bi
   \item The problem contains two denominators 
-        $$\quad D_1 = l^2-m^2 \quad \quad D_2 = (l-p)^2-m^2  $$
+        $$\quad D_1 = l^2-m^2 \quad \quad D_2 = (l-p)^2-m^2  $$%
         which map into our integration invariants in a unique way 
         $$ F(p,l,m) \;\to\; F(\blue{l^2},\; \blue{l \!\cdot\! p}, \; p^2, \; m) \to F(\blue{D_1}, \blue{D_2}, p^2,m) $$
-  \item One integral family\footnote{since now we do not write $p^2$ and $m$ explicitly}
+  \item One integral family
         $$F(n_1, n_2) = \int \D^n l \frac{1}{D_1^{n_1} D_2^{n_2}}$$
 \ei
 
@@ -184,17 +193,19 @@ $$
 
   SetDim[n];
   Declare[{m2}, Number, {l,p}, Vector];
-  NewBasis[$b, {sp[l]-m2, sp[l-p]-m2}, {l}];
+  NewBasis[$b, {sp[l]-m2, sp[l-p]-m2}, {l}, Directory->"b.ibp"];
+
+  GenerateIBP[$b];
+  AnalyzeSectors[$b];
+  FindSymmetries[$b];
 
 \end{Verbatim}
 \newpage
 
 
-\titleboxx{Example I}{Master Integrals}
+\titleboxx{I.1}{\Large Master Integrals}
 \begin{Verbatim}[fontsize=\small,frame=lines, label=\fbox{Mathematica}]
 
-  AnalyzeSectors[$b];
-  FindSymmetries[$b];
   SolvejSectors /@ UniqueSectors[$b]
 
   MIs[$b]
@@ -203,14 +214,15 @@ $$
 \end{Verbatim}
 \bi
   \item We obtain two master integrals
-        $$F_1 = F(0,1) \qquad F_2 = F(1,1)$$
+        $$F_1 = F(0,1) =  \int \D^n l \frac{1}{(l-p)^2-m^2} \qquad F_2 = F(1,1) =  \int \D^n l \frac{1}{\big(l^2-m^2\big)\x\big((l-p)^2-m^2\big)}$$
   \item Any other integral is a linear combination of only these two, e.g.,
         $$F(2,1) = \frac{n-2}{2 m^2 (p^2-4m^2)} F_1 + \frac{n-3}{p^2-4m^2} F_2$$
+  \item We can check that since we can do $l\to l+p$ transformation $$F(0,1) = F(1,0)$$
 \ei
 \newpage
 
 
-\titleboxx{Example I}{Differential Equations}
+\titleboxx{I.2}{\Large Differential Equations}
 
 \vs
 \begin{Verbatim}[fontsize=\small,frame=lines, label=\fbox{Mathematica}]
@@ -226,10 +238,10 @@ $ode = Coefficient[#, MIs[$b]]& /@ $ds;
     \begin{aligned}
      \frac{\D F_1}{\D p^2} & = 0
      \\
-     \frac{\D F_2}{\D p^2} & = \frac{2-2\eps}{s\x(s-4m^2)} F_1 + \frac{2m^2-\eps s}{s\x(s-4m^2)} F_2
+     \frac{\D F_2}{\D p^2} & = \frac{2-2\eps}{p^2\x(p^2-4m^2)} F_1 + \frac{2m^2-\eps p^2}{p^2\x(p^2-4m^2)} F_2
     \end{aligned}
   $$
-  where $s=p^2$ and $n=4-2\eps$
+  where we work in $n=4-2\eps$ space-time dimensions
 \ei
 \vs
 
@@ -243,16 +255,439 @@ Derive another system of differential equations, but this time in~$m^2$. (Hint: 
 \newpage
 
 
-\titleboxx{Example I}{$\eps$-form}
+\titlebox{Epsilon Form}
+\bi
+  \item Classical Notation
+$$
+\begin{aligned}
+ \frac{\D F_1}{\D x} & = A_{11}(x,\eps) F_1 + A_{12}(x,\eps) F_2
+ \\
+ \frac{\D F_2}{\D x} & = A_{21}(x,\eps) F_1 + A_{22}(x,\eps) F_2
+\end{aligned}
+$$
+  \item Matrix Notation
+$$
+\frac{\D \bar{F}}{\D x} = A(x,\eps) \x \bar{F}
+\qquad \text{where}\qquad
+A=
+\begin{pmatrix}
+  A_{11}(x,\eps) & A_{12}(x,\eps) \\
+  A_{21}(x,\eps) & A_{22}(x,\eps)
+ \end{pmatrix}
+\quad \text{and}\quad
+\bar{F}=
+\begin{pmatrix}
+  F_1 \\
+  F_2
+ \end{pmatrix}
+$$
+\ei
+It is very convenient (as observed by J.Henn) to have our system in the epsilon form
+$$
+\frac{\D G}{\D x} = \eps \x B(x) \x G
+$$%
+since in this case we can easily find the solution to any order in $\eps$ parameter, as we will see on the next slide.
 \newpage
+
+
+\titlebox{A few words on \fuchsia}
+\fuchsia \ldots
+\newpage
+
+
+\titleboxx{I.3}{\Large Epsilon Form by \fuchsia}
+Let us introduce a new variable $y$, such that
+$$p^2 = -4m^2\frac{y^2}{1-y^2}$$%
+The new equations look as
+  $$
+    \begin{aligned}
+     \frac{\D F_1}{\D y} & = 0
+     \\
+     \frac{\D F_2}{\D y} & = \frac{1-\eps}{y \x m^2} F_1 + \left( \frac{\eps}{1-y} - \frac{\eps}{1+y} - \frac{1}{y} \right) F_2
+    \end{aligned}
+  $$
+
+With the help of \fuchsia we find a new basis $G_1$, $G_2$ given by the system
+  $$
+    \begin{aligned}
+     F_1 & = \frac{4(1-2\eps)}{3(1-\eps)} G_1
+     \\
+     F_2 & = \frac{4}{3m^2} G_1 - \frac{2}{y} G_2
+    \end{aligned}
+  $$%
+For this basis the differential equations are the epsilon form
+  $$
+    \begin{aligned}
+     \frac{\D G_1}{\D y} & = 0
+     \\
+     \frac{\D G_2}{\D y} & = \frac{2}{3m^2}\left( \frac{\eps}{1+y}+\frac{\eps}{1-y} \right) G_1 - \left(\frac{\eps}{1-y}-\frac{\eps}{1+y}\right) G_2
+    \end{aligned}
+  $$
+\newpage
+
+
+\titlebox{Solutions}
+We are looking for the solution of a given system of ordinary differential equations in the epsilon form
+$$
+\frac{\D G}{\D x} = \eps \x B(x) \x G
+$$%
+as a Laurent series in $\eps$
+$$
+  \bbox{
+  G(x,\eps) = G_0(x) + G_1(x) \x \eps + G_2(x) \x \eps^2 + \ldots}
+$$%
+Let us put this "solution" into the initial equation
+$$
+\frac{\D G_0}{\D x} + \frac{\D G_1}{\D x} \eps + \frac{\D G_2}{\D x} \eps^2 + \ldots = \eps \x B(x) \x G_0 + \eps^2 \x B(x) \x G_1
+$$%
+we get
+$$
+ \frac{\D G_0}{\D x} = 0,
+ \qquad
+ \frac{\D G_1}{\D x} = B(x) G_0,
+ \qquad
+ \frac{\D G_2}{\D x} = B(x) G_1
+ \qquad
+ \ldots
+ \qquad
+ \frac{\D G_{n}}{\D x} = B(x) G_{n-1}
+$$%
+This system can be easily solved (as promised)
+$$
+ G_0 = C_0,
+ \qquad
+ G_1 = C_1 + \int \D x B(x) C_0,
+ \qquad
+ G_2 = C_2 + \int \D x B(x) \left( C_1 + \int \D x B(x) C_0\right)
+ \qquad
+ \ldots
+$$
+$$
+\bbox{
+ G_n(x) = C_n + \int \D x B(x) G_{n-1}
+}
+$$
+\newpage
+
+
+\titlebox{Solutions}
+
+My implementation of the solution algorithm, which I use to get results for the next slide.
+\vs
+
+\begin{Verbatim}[fontsize=\small,frame=lines, label=\fbox{Mathematica}]
+
+  SolveODE[m_, x_, ep_, n_, c_] := Module[
+    {$i, $j, $n, $sol, $sol0, $sol1},
+
+    $n = Length[m];
+    $sol[0] = Table[c[$j,0], {$j,1,$n}];
+    For[$i=1, $i<=n, $i++,
+      $sol0 = Table[c[$j,$i], {$j,1,$n}];
+      $sol1 = Integrate[Dot[#,$sol[$i-1]],x]& /@ m;
+      $sol[$i] = $sol0 + $sol1;
+    ];
+    Sum[ep^$i*$sol[$i], {$i,0,n}]
+  ];
+
+\end{Verbatim}
+\newpage
+
+
+\titleboxx{I.4}{\Large Solutions}
+\bi
+  \item Master \#1
+    $$ F_1(y,m^2) = \frac{4}{3}C_1^{(0)} +  \frac{4}{3}\left(C_1^{(1)}-C_1^{(0)}\right)\eps + \ldots $$
+  \item Master \#2
+    $$
+      F_2(y,m^2)
+      =
+      \frac{4C_1^{(0)}}{3m^2}
+      -
+      \frac{C_2^{(0)}}{y}
+      +
+      \frac{\eps}{3m^2y}
+      \left(
+          4yC_1^{(1)}
+        - 6m^2C_2^{(1)}
+        + \big(4 C_1^{(1)}
+        - 6 m^2 C_2^{(0)}\big) \ln\left(\frac{1-y}{1+y}\right)
+      \right)
+    $$
+  \item Finally, we need to find unknown integration constants whcih are \\ functions of $m^2$ and~$\eps$, i.e.
+        $$ C_1^{(0)}(m^2,\eps), \quad  C_1^{(1)}(m^2,\eps), \quad \ldots $$
+        $$ C_2^{(0)}(m^2,\eps), \quad  C_2^{(1)}(m^2,\eps), \quad \ldots $$
+\ei
+\newpage
+
+
+\titleboxx{I.5}{\Large Integration Constants \#1}
+    Master \#1 (from \fuchsia)
+    $$ F_1(y,m^2) = \frac{4}{3}C_1^{(0)} +  \frac{4}{3}\left(C_1^{(1)}-C_1^{(0)}\right)\eps + \ldots $$
+
+    Closed-form solution from the literature (see Smirnov's book)
+    $$ F(0,n) = (-1)^n \frac{\Gamma(n-2+\eps)}{\Gamma(n)} \x (m^2)^{2-\eps-n} $$
+    $$
+      F_1(y,m^2)
+       = F(0,1) 
+       = \frac{m^2}{\eps} + m^2 \left(1- \gamma_E - \ln{m^2} \right) + \ldots
+    $$
+
+Result \#1
+    $$ \bbox{C_1^{(0)} = \frac{3m^2}{4\eps} \quad C_1^{(1)} = \frac{3m^2 \left(2- \gamma_E - \ln{m^2} \right)}{4\eps}}$$
+\newpage
+
+
+\titleboxx{I.5}{\Large Integration Constants \#2}
+  Result \#1
+    $$ C_1^{(0)} = \frac{m^2}{\eps} \quad C_1^{(1)} = \frac{m^2 \left(1- \gamma_E - \ln{m^2} \right)}{\eps}$$
+
+  Master \#2 (with Result \#1 substituted)
+    $$
+      F_2(y,m^2)
+      =
+      \frac{1}{\eps}
+      +
+      \frac{2y - \gamma_E\x y - 2 C_2^{(0)} - y\x \ln{m^2} + \ln\left(\frac{1-y}{1+y}\right)}{y}
+      +
+      \ldots
+    $$
+
+  We require that at the limit $y\to 0$ ($p^2\to 0$) our result is regular. This leads to the solution
+$$ C_2^{0} = 0 $$
+
+Result \#2
+$$\bbox{
+  F_2(y,m^2)
+  =
+  \frac{1}{\eps}
+  +
+ 2 - \gamma_E\x - \ln{m^2} + \frac{1}{y}\ln\left(\frac{1-y}{1+y}\right)
+  +
+  \ldots}
+$$
+
+This is in agreement with T.Riemann Monday's lecture!
+\newpage
+
+
+\titleboxx{Example I}{\Large \bf Conclusions}
+\newpage
+
+
+\titlebox{II.1 Splitting Functions from $e^+ e^-$-annihilation}
+In this example, I will show how to calculate a gluon-quark splitting function
+$$P_{gq} = \frac{1 + (1-x)^2}{x}$$%
+Using this technique you will be able to calculate remaining splitting functions $P_{qq}$, $P_{qg}$, and $P_{gg}$ as well as higher-order corrections to these quantities.
+
+\begin{center}
+\begin{axopicture}(320,80)
+  \SetScale{0.75}
+  \Line[arrow](60,50)(20,90)
+  \Line[arrow](20,10)(60,50)
+  \Vertex(60,50){2}
+  \Photon(60,50)(120,50){5}{4}
+  \Vertex(120,50){2}
+  \Line[arrow](120,50)(160,90)
+  \Line[arrow](160,10)(120,50)
+  \Gluon(130,60)(160,60){-4}{3}
+  \Vertex(130,60){2}
+  \Text(90,65){$q$}
+  \Text(10,90){$q_1$}
+  \Text(10,10){$q_2$}
+  \Text(170,90){$p_1$}
+  \Text(170,60){$p_3$}
+  \Text(170,10){$p_2$}
+
+  \SetOffset(180,0)
+  \Line[arrow](60,50)(20,90)
+  \Line[arrow](20,10)(60,50)
+  \Vertex(60,50){2}
+  \Photon(60,50)(120,50){5}{4}
+  \Vertex(120,50){2}
+  \Line[arrow](120,50)(160,90)
+  \Line[arrow](160,10)(120,50)
+  \Gluon(130,40)(160,40){-4}{3}
+  \Vertex(130,40){2}
+  \Text(90,65){$q$}
+  \Text(10,90){$q_1$}
+  \Text(10,10){$q_2$}
+  \Text(170,90){$p_1$}
+  \Text(170,40){$p_3$}
+  \Text(170,10){$p_2$}
+\end{axopicture}
+\end{center}
+$$e^+(q_1) + e^-(q_2) \to q(p_1) + \bar{q}(p_2) + g(p_3)$$
+
+We employ a mass-factorization theorem 
+$$
+ \frac{\D\sigma_i}{\D x} = \frac{P_{iq}}{\eps} + a_i + b_i \eps + \ldots
+$$%
+where $q=q_1+q_2$ and
+$$
+\frac{\D\sigma_i}{\D x} = \int \D^n p_1 \delta(p_1^2) \x \D^n p_2 \delta(p_2^2) \x \D^n p_3 \delta(p_3^2) \x \delta\left(x-\frac{2 q\!\cdot\!p_i}{q^2}\right) \x \sigma(q_1,q_2,p_1,p_2,p_3)
+$$
+\newpage
+
+
+\titlebox{II.2 Phase-Space Integrals}
+By their structure phase-space integrals are very similar to loop integrals (compare to the one-loop propagator from Example I), except that we apply on-shell conditions $\delta(p_i^2)$ to the cut lines as shown in the following {\bf cut graph}
+
+\begin{center}
+\begin{axopicture}(220,80)
+  \SetScale{0.75}
+  \Photon(80,50)(120,50){5}{3}
+  \Vertex(120,50){2}
+  \Line[arrow](160,90)(120,50)
+  \Line[arrow](120,50)(160,10)
+  \Gluon(130,60)(190,60){-4}{6}
+  \Vertex(130,60){2}
+  \Vertex(190,60){2}
+  \Line[arrow](200,50)(160,90)
+  \Line[arrow](160,10)(200,50)
+  \Vertex(200,50){2}
+  \Photon(200,50)(240,50){5}{3}
+  \DashLine(160,5)(160,95){6}
+\end{axopicture}
+\end{center}
+
+$$
+\frac{\D\sigma_g}{\D x} = \int \D^n p_1 \delta(p_1^2) \x \D^n p_2 \delta(p_2^2) \x \D^n p_3 \delta(p_3^2) \x \delta\left(x-\frac{2 q\!\cdot\!p_3}{q^2}\right) \x \sigma(q_1,q_2,p_1,p_2,p_3)
+$$
+where
+$$
+\sigma(q_1,q_2,p_1,p_2,p_3)
+=
+N \frac{(\spr{p_1}{q_1})^2+(\spr{p_2}{q_1})^2+(\spr{p_1}{q_2})^2+(\spr{p_2}{q_2})^2}{\spr{p_1}{p_3}\x\spr{p_2}{p_3}}
+$$
+This integration is equivalent to the 2-loop propagator, since we can eliminate one of the integration momenta using momentum conservation
+$$ q_1 + q_2 = p_1 + p_2 + p_3 $$
+\newpage
+
+
+\titlebox{II.3 Integration-by-Parts}
+
+In order to integrate the cross-section we need a new IBP basis. Let us define one as
+\vs
+
+\begin{Verbatim}[fontsize=\small,frame=lines, label=\fbox{Mathematica}]
+
+NewBasis[$a, {sp[p1], sp[p3], sp[q1+q2-p1-p3], s*x-2sp[q1+q2,p3], sp[p1,p3]},
+             {p1, p3}, Append -> True];
+
+GenerateIBP[$a];
+AnalyzeSectors[$a, {___,0,0}, CutDs -> {1,1,1,1,0,0,0}];
+FindSymmetries[];
+
+SolvejRules /@ UniqueSectors[$a];
+
+\end{Verbatim}
+\vs
+Note additional arguments in \code{AnalyzeSectors} routine:
+\bi
+  \item in \code{\{\_\_\_,0,0\}} 0's represent invariants which appear in numerators only
+  \item in \code{CutDs -> \{1,1,1,1,0,0,0\}} 1's represent "cut" propagators. It means that all integrals with at least one non-positive indices in these places vanish.
+\ei
+
+\vs
+We get only one master integral
+$$
+F_1(x,\eps) = \int \D^n p_1 \delta(p_1^2) \x \D^n p_2 \delta(p_2^2) \x \D^n p_3 \delta(p_3^2) \x \delta\left(x-\frac{2 q\!\cdot\!p_3}{q^2}\right)
+$$
+
+\newpage
+
+
+\titlebox{Partial Fractioning}
+Given a set of denominators, being a {\em linear combination} of the kinematic invariants $s_{ij}$, make a partial fraction such that
+$$
+  \frac{1}{D_1\ldots D_n} \to \frac{a_1}{D_2 \ldots D_n} +  \frac{a_2}{D_1 D_3 \ldots D_n} + \ldots + \frac{a_n}{D_1 \ldots D_{n-1}}
+$$
+
+All we need is to solve a linear system of equations
+$$ a_1 D_1 + \ldots + a_n D_n = N $$
+where the coefficient in front of every $s_{ij}$ is zero and $N$ is some number.
+
+\vs
+In particaulr, for
+$$
+  A = \frac{1}{(x+1)(y+1)(x+y+1)}
+$$
+we write down
+$$
+  (a_1 + a_3) x + (a_2 + a_3) y + a_1 + a_2 + a_3 = N
+$$
+the solution is
+$$
+  a_1 = - a_3 \quad  a_2 = - a_3 \quad N = - a_3
+$$
+which gives
+$$
+  A = \frac{1}{(y+1)(x+y+1)} + \frac{1}{(x+1)(x+y+1)} - \frac{1}{(x+1)(y+1)}
+$$
+\newpage
+
+
+\titlebox{II.3 Integration-by-Parts}
+
+Now we can convert the initial cross-section into the $j$-form and make IBP reduction.
+\begin{Verbatim}[fontsize=\small,frame=lines, label=\fbox{Mathematica}]
+
+$PS2 = x / (sp[p1] sp[p3] sp[q1+q2-p1-p3] (s*x-2*sp[q1+q2,p3]));
+
+$jM2 = Toj[$a, $PS2 $M2];
+
+$jM2 = $jM2 // IBPReduce
+
+$Pgq = Series[$jM2 /. {m -> 4 - 2 eps}, {eps, 0, -1}]
+
+\end{Verbatim}
+\vs
+This gives us
+$$ P_{gq} \sim \frac{2-2x+x^2}{\color{red}x^2} \x F_1(x)  $$%
+which contains one $x$ factor more in the denominator.
+
+\vs\vs
+Maybe $F_1(x) \sim x$? Let us check this\ldots
+
+\newpage
+
+
+\titlebox{II.4 Differential Equations}
+
+\vs
+\begin{Verbatim}[fontsize=\small,frame=lines, label=\fbox{Mathematica}]
+
+$F1 = j[$a, 1, 1, 1, 1, 0, 0, 0];
+
+$dF1 = Toj[$a, D[Fromj[$F1], x]] // IBPReduce;
+
+\end{Verbatim}
+\vs
+This code produces the following equation
+$$
+  \frac{\D F_1}{\D x} = \left( \frac{\eps}{1-x}+\frac{1-2\eps}{x} \right) F_1
+$$
+
+Of course we could use \fuchsia and find the $\eps$-form, but we can solve this in a closed form
+$$
+  F_1 = C(\eps) \x (1-x)^\eps \x x^{1-2\eps}
+$$
+which confirms our assumption from the previous slide.
+
+The final result is
+$$ \bbox{P_{gq} \sim \frac{2-2x+x^2}{x}}$$%
+
+\newpage
+
 
 
 \titlebox{Holonomic Functions}
 A function $f=f(x)$ is called {\em holonomic} if there exist polynomials $a_n(x),\x\ldots,\x a_0(x)$ such that
-\be
+$$
   \label{eq:ode}
   a_n(x) f^{(n)} - a_{n-1}(x)\x f^{(n-1)} - \ldots - a_0(x) \x f = 0
-\ee
+$$%
 holds for all $x$. Hence, the holonomic function is uniquely defined by
 \bi
   \item the differential equation
@@ -276,14 +711,14 @@ holds for all $x$. Hence, the holonomic function is uniquely defined by
 \ei
 
 \vs\vs
-For more details, see the lecture by M.Kauers at CAPP 2011.
+For more details, see the lecture by S.Moch at CAPP17 and  S.Kauers at CAPP11.
 \newpage
 
 \titlebox{Holonomic Functions}
 A function $f=f(x)$ is called {\em holonomic} if there exist polynomials $a_n(x),\x\ldots,\x a_0(x)$ such that
 $$
   a_n(x) f^{(n)} - a_{n-1}(x)\x f^{(n-1)} - \ldots - a_0(x) \x f = 0
-$$
+$$%
 holds for all $x$. Hence, the holonomic function is uniquely defined by
 \bi
   \item the differential equation
@@ -296,12 +731,8 @@ holds for all $x$. Hence, the holonomic function is uniquely defined by
 \bn
 \item With the help of polynomials and differential equations we can define a large set of complicated functions which have no closed form and usually have a non-trivial integration representation.
 \item These functions appear in the Feynman integrals.
-\item In some situation it is much easier to solve ODE (than to directly integrate). \\
-      In the rest of my talk I will show you how to do that.
+\item In some situation it is much easier to solve ODE than to integrate directly.
 \en
-\newpage
-
-\titlebox{Fuchsian Differential Equations}
 \newpage
 
 
@@ -367,10 +798,6 @@ $$D = x\frac{\D}{\D x}$$
 \fbox{Exercise 2.}
 Using your favourite CAS write a routine which for a given Generalized Hypergeometric Function, defined by the list $\{a_1,\ldots,a_{p+1},b_1,\ldots,b_p\}$, it returns a corresponding ODE, defined by the list $\{a_1(x),\ldots,a_p(x)\}$, in accordance with notation of eq.~\eqref{eq:ode}.
 
-\newpage
-
-
-\titleboxx{Example III}{NLO real correction to $2\to 2$ in QCD}
 \newpage
 
 
