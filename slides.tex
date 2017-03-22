@@ -2,7 +2,7 @@
 \usepackage[%
   papersize={160mm,120mm},
   bottom=2mm,
-  top=2mm,
+  top=5mm,
   textwidth=150mm,
   textheight=115mm,
   hcentering,
@@ -15,46 +15,62 @@
 \usepackage[T1]{fontenc}
 \usepackage{tgschola}
 \usepackage{fouriernc}
-\usepackage{parskip}
-\setlength{\parskip}{0.25em}
-\renewcommand{\baselinestretch}{0.9}
 
 \usepackage{enumitem}
 \setlist{itemsep=.05em,parsep=.25em}
 
 \usepackage{graphicx}
 \usepackage{amsmath, caption, fancybox, soul,xspace}
-\usepackage[dvipsnames]{xcolor}
+\usepackage[svgnames]{xcolor}
 \usepackage{hyperref}
 \hypersetup{colorlinks,linkcolor=,urlcolor=blue}
 
-\usepackage{axodraw2}
-
-\usepackage{fancyvrb}
 
 \usepackage{minibox}
 
 \input{include/commands}
 
-\newcommand{\refx}[1]{\href{1}{\scriptsize #1}}
-\newcommand{\titlebox}[1]{\centerline{\color{black}\shadowbox{\begin{Bcenter}{\Large \color{Blue} #1}\end{Bcenter}}}}
-\newcommand{\titleboxx}[2]{\centerline{\color{black}\shadowbox{\begin{Bcenter}\Large\color{black} #1\vspace{1mm}\\  {\color{white}q}{\color{black}#2}{\color{white}q}\end{Bcenter}}}}
+% Colors
+\newcommand{\cmath}{\color{Plum}}
+\definecolor{text}{RGB}{60,60,60}
+\definecolor{title}{RGB}{0,0,0}
+\newcommand{\green}{\color{Green}}
+\newcommand{\orange}{\color{Orange}}
+\newcommand{\red}{\color{Red}}
+
+% Titles
+\newcommand{\titleb}[2]{{\color{Blue}{\LARGE #1}\hfill{\Large #2}\vspace{-2mm}\par\rule{\textwidth}{1pt}\vs}}
+\newcommand{\titlea}[1]{\titleb{#1}{}}
+
+% References
+\newcommand{\people}[1]{{\color{Magenta}#1}}
 
 \newcommand{\bbox}[1]{\color{black}\boxed{{\color{Plum}#1}}}
 
-%\setmonofont{Go-Mono}
-\definecolor{textcolor}{RGB}{60,60,60}
+
+% Code
+\usepackage{tcolorbox,fancyvrb}
+\newenvironment{codeblock}
+ {\SaveVerbatim{cverb}}
+ {\endSaveVerbatim
+  \flushleft\fboxrule=0pt\fboxsep=.5em
+  \colorbox{LightGray}{%
+    \makebox[\dimexpr\linewidth-2\fboxsep][l]{\BUseVerbatim{cverb}}}
+  \endflushleft}
+
+% Feynman Graphs
+\usepackage{axodraw2}
 
 \newcommand{\spr}[2]{#1\!\cdot\!#2}
 
-\everymath{\color{Plum}}
-\everydisplay{\color{Plum}}
+\everymath{\cmath}
+\everydisplay{\cmath}
 
 \setlength{\parindent}{0mm}
 
 \begin{document}
 
-\color{textcolor}
+\color{text}
 
 \begin{center}
   \mbox{}
@@ -71,73 +87,124 @@
   \mbox{}
 \end{center}
 \newpage
+
+
+\titlea{Introduction}
+
+Feynman Integrals Calculus --- became in recent decades a science on its own. 
+
+  \begin{equation*}
+    \int {\color{Black}\underbrace{ \color{NavyBlue}\D^d l_1 \ldots \D^d l_n}_{\text{loops}}} \,\, 
+         {\color{Black}\underbrace{\color{Green} \D^d p_1 \delta(p_1^2) \ldots \D^d p_m \delta(p_m^2)}_{\text{legs}}} \,\, \frac{1}{D_1^{n_1} \ldots D_k^{n_k}}
+  \end{equation*}
+    {\em Numerical methods}
+    \bi
+       \item Sector Decomposition, Subtraction Schemes, \ldots
+    \ei
+    {\em Analytical methods}
+    \begin{itemize}
+      \item Feynman/Schwinger/Mellin-Barnes parametrization
+      \item \boxed{\text{Integration-By-Parts}} reduction \people{Chetyrkin, Tkachov '81}
+      \begin{itemize}
+        \item Laporta algorithm \people{Laporta '00}: \texttt{AIR}, \texttt{FIRE}, \texttt{Reduze}
+        \item Symbolic reduction: \texttt{LiteRed} \people{Lee '12}
+        \item private implementations
+      \end{itemize}
+      \item \boxed{\text{Method of Differential Equations}} \people{Kotikov '91, Remiddi '97}
+      \begin{itemize}
+        \item Epsilon Form \people{Henn '13}
+        \item Lee algorithm \people{Lee '14}: \fuchsia, \texttt{Epsilon}
+      \end{itemize}
+      \item \ldots
+    \end{itemize}
+\newpage
+
+
+\titlea{Introduction}
+
+Feynman Integrals Calculus --- became in recent decades a science on its own. 
+
+  \begin{equation*}
+    \int {\color{Black}\underbrace{ \color{NavyBlue}\D^d l_1 \ldots \D^d l_n}_{\text{loops}}} \,\, 
+         {\color{Black}\underbrace{\color{Green} \D^d p_1 \delta(p_1^2) \ldots \D^d p_m \delta(p_m^2)}_{\text{legs}}} \,\, \frac{1}{D_1^{n_1} \ldots D_k^{n_k}}
+  \end{equation*}
+ \boxed{\text{Integration-By-Parts}} reduction
+ \bi
+   \item Integral Families
+   \bi
+     \item integration momenta
+     \bi
+       \item loop -- $l_1,\ldots,l_n$ only
+       \item phase-space -- $p_1,\ldots,p_m$ only
+       \item mixed 
+     \ei
+     \item set of denominators (topology)
+     \item master integrals
+   \ei
+   \item Reduction
+   \bi
+     \item any integral (from the family) in terms of masters
+     \bi
+       \item \boxed{\text{including derivatives}}
+     \ei
+     \item completely analytical
+     \item highly automated
+   \ei
+ \ei
+\newpage
  
 
-\titlebox{Plan for Today}
-\begin{enumerate}
-  \item Methods for caluclating Feynman integrals (20')
-  \begin{itemize}
-    \item Integration by Parts (IBP)
-    \item Method of Differential Equations (MDE)
-  \end{itemize}
-  \item MDE \& Solution Techniques (30')
-  \begin{itemize}
-    \item ordinary vs partial
-    \item epsilon form
-    \item boundary conditions
-  \end{itemize}
-  \item Examples (30')
-  \item MDE \& Limitations (10')
-\end{enumerate}
+\titlea{Plan for Today}
+
+\vs
+You will learn:
+\bi
+  \item Integration-by-Parts Reduction
+  \bi
+    \item \litered
+  \ei
+  \item Differential Equations in Epsilon Form
+  \bi
+    \item \fuchsia
+  \ei
+  \item Simple examples
+  \bn
+    \item One-Loop Integral
+    \item Two-Loop Phase-Space Integral
+  \en
+  \item Other tricks
+\ei
 \newpage
 
-\titlebox{I.1 Feynman Integrals Calculus}
-\bi \item Feynman/Schwinger parameters
-          \bi \item \hyperint and hyperlogarithms
-              \ei
-    \item Mellin-Barnes (MB) representation
-          \bi \item popular for massive diagrams
-              \ei
-    \item Integration-by-parts (IBP) reduction
-          \bi \item universal and easy-to-use
-              \item \fire, \litered, \reduze
-              \ei
-    \item Method of differential equations (MDE)
-          \bi \item huge potential
-              \ei
-    \ei
-\newpage
 
-\titlebox{I.2 Method of Differential Equations}
+\titlea{Method of Differential Equations}
 \bn
-  \item Find IBP rules
+  \item Construct System of ODE ({\orange medium})
     \bi
-      \item highly automated
-      \item \fire, \litered, \reduze
+      \item from definition (e.g. special functions)
+      \item from IBP rules
+      \bi
+        \item highly automated
+        \item \texttt{AIR}, \fire, \litered, \reduze
+      \ei
     \ei
-  \item Derive ODE
-  \item Find $\eps$-form
+  \item Find Epsilon Form ({\red hard})
     \bi
-      \item already very powerful (less-understood than IBP)
-      \item Lee method: \fuchsia (2016), \texttt{epsilon} (2017)
-      \item other:
+      \item automated
+      \item Lee method: \fuchsia, \texttt{epsilon}
     \ei
-  \item Solve ODE
-  \item Find constants of integration
+  \item Solve System of ODE ({\green easy})
+  \item Find Constants of Integration ({\orange medium})
     \bi
       \item depends on the problem
-      \item may be the most complex task
     \ei
 \en
 \newpage
 
-\titleboxx{\Large Example I}{\Large \bf One-Loop Massive Self-Energy}
-%{\small
-%{\bf Scalar integrals} are the most {\em convenient} to compute.
-%Therefore, we assume that integrals with vector or spinor indices (e.g. amplitudes) are already expressed as a combination of scalar integrals and constant objects which reveal the index structure.}
-\bi
-  \item {\bf Functions}: {\em from vectors to scalars}
+
+\titleb{Example 1}{One-Loop Massive Self-Energy}
 $$ \raisebox{-28pt}{
+     \color{black}
      \SetScale{0.5}
      \begin{axopicture}(200,120)
        \SetOffset(0,10)
@@ -159,12 +226,13 @@ $$ \raisebox{-28pt}{
 $$
 \vspace{-3mm}
 $$
-   \Pi(\green{p^2},m)
+   \Pi({\green{p^2}},m)
    =
    \int \D^n l \; F(p,l,m)
 $$
+\bi
   \item {\bf Arguments}: {\em from vectors to scalars}
-        $$ F(p,l,m) \;\to\; F(\blue{l^2},\; \blue{l \!\cdot\! p}, \; \green{p^2}, \; m) $$
+        $$ F(p,l,m) \;\to\; F(\blue{l^2},\; \blue{l \!\cdot\! p}, \; {\green{p^2}}, \; m) $$
   \item In general, the number of \blue{scalar integration variables} is given by
         $$N(L,E) = \frac{L\,(L+1)}{2} + L\,E \quad \sim \quad \mathcal{O}(L^2) \;\;\leftarrow\;\; \parbox{50mm}{another source of growing complexity at higher orders}$$%
         where $E$ -- number of {\em external momenta}, $L$ -- number of {\em loop momenta}
@@ -176,19 +244,17 @@ $$
 \newpage
 
 
-\titleboxx{I.1}{\Large Integration-by-Parts Reduction}
+\titleb{Example 1}{Integration-by-Parts Reduction}
 \bi
   \item The problem contains two denominators 
         $$\quad D_1 = l^2-m^2 \quad \quad D_2 = (l-p)^2-m^2  $$%
         which map into our integration invariants in a unique way 
         $$ F(p,l,m) \;\to\; F(\blue{l^2},\; \blue{l \!\cdot\! p}, \; p^2, \; m) \to F(\blue{D_1}, \blue{D_2}, p^2,m) $$
+        \vspace{-1.5em}
   \item One integral family
         $$F(n_1, n_2) = \int \D^n l \frac{1}{D_1^{n_1} D_2^{n_2}}$$
 \ei
-
-\vspace{4mm}
-\begin{Verbatim}[fontsize=\small,frame=lines, label=\fbox{Mathematica}]
-
+\begin{codeblock}
   <<LiteRed`
 
   SetDim[n];
@@ -198,20 +264,30 @@ $$
   GenerateIBP[$b];
   AnalyzeSectors[$b];
   FindSymmetries[$b];
-
-\end{Verbatim}
+\end{codeblock}
+%\end{Verbatim}
 \newpage
 
 
-\titleboxx{I.1}{\Large Master Integrals}
-\begin{Verbatim}[fontsize=\small,frame=lines, label=\fbox{Mathematica}]
+\titleb{Example 1}{Integration-by-Parts Reduction}
+In dimensional regularization the integral over a total derivative is zero.
+$$ \int \D^n l_i \frac{\D}{\D l_i^\mu} \lb q^\mu  F(p_1,\ldots, l_1, \ldots) \rb $$%
+where $q$ is arbitrary external or internal momenta.
 
+\begin{codeblock}
+  IBP[$b]
+\end{codeblock}
+\newpage
+
+
+\titleb{Example 1}{Master Integrals}
+\begin{codeblock}
   SolvejSectors /@ UniqueSectors[$b]
 
   MIs[$b]
 
   > {j[$b,0,1], j[$b,1,1]}
-\end{Verbatim}
+\end{codeblock}
 \bi
   \item We obtain two master integrals
         $$F_1 = F(0,1) =  \int \D^n l \frac{1}{(l-p)^2-m^2} \qquad F_2 = F(1,1) =  \int \D^n l \frac{1}{\big(l^2-m^2\big)\x\big((l-p)^2-m^2\big)}$$
@@ -222,14 +298,12 @@ $$
 \newpage
 
 
-\titleboxx{I.2}{\Large Differential Equations}
+\titleb{Example 1}{Differential Equations}
 
-\vs
-\begin{Verbatim}[fontsize=\small,frame=lines, label=\fbox{Mathematica}]
-
+\begin{codeblock}
 $ds = Dinv[#,sp[p,p]]& /@ MIs[$b] // IBPReduce;
 $ode = Coefficient[#, MIs[$b]]& /@ $ds;
-\end{Verbatim}
+\end{codeblock}
 \vs
 
 \bi
@@ -246,16 +320,17 @@ $ode = Coefficient[#, MIs[$b]]& /@ $ds;
 \vs
 
 This system is simple and we could solve it right away using {\em <your favourite>} method.
-Today, I want to demonstrate you how this and many other systems can be solved throug using their {\bf $\boldsymbol{\eps}$-form}.
+Today, I want to demonstrate you how this and many other systems can be solved throug using their $\eps$-form.
 As you will see this is a highly automated task.
 
 \vs
-\fbox{Exercise 1a.} \\
-Derive another system of differential equations, but this time in~$m^2$. (Hint: instead of \code{Dinv} use \code{Fromj}, \code{D}, and \code{Toj} functions ).
+\fbox{Exercise} \\
+Derive another system of differential equations, but this time in~$m^2$.\\
+(Hint: use \code{Fromj}, \code{D}, and \code{Toj} functions instead of \code{Dinv}).
 \newpage
 
 
-\titlebox{Epsilon Form}
+\titlea{Epsilon Form}
 \bi
   \item Classical Notation
 $$
@@ -282,20 +357,74 @@ A=
  \end{pmatrix}
 $$
 \ei
-It is very convenient (as observed by J.Henn) to have our system in the epsilon form
+It is very convenient to have our system in the epsilon form
 $$
 \frac{\D G}{\D x} = \eps \x B(x) \x G
 $$%
 since in this case we can easily find the solution to any order in $\eps$ parameter, as we will see on the next slide.
+
+Some physical examples may lead to systems with $\sim 500$ equations.
+Hence, it is very important to make this task automatic.
 \newpage
 
 
-\titlebox{A few words on \fuchsia}
-\fuchsia \ldots
+\titlea{A few words on \fuchsia}
+  {\bf Input}
+  \bi
+    \item System of Ordinary Differential Equations $A(x,\eps,\ldots)$, i.e.,
+      $$\frac{\D F}{\D x} = A(x,\eps,\ldots) \x F(x,\eps,\ldots)$$%
+  \ei
+  {\bf Output}
+  \bi
+    \item Equivalent System in the Epsilon Form
+      $$\frac{\D G}{\D x} = \eps \x B(x,\ldots) \x G(x,\eps,\ldots)$$
+    \item Corresponding Basis Transformation 
+      $$F(x,\eps,\ldots) = T(x,\eps,\ldots) \times G(x,\eps,\ldots)$$
+    \item Other Operations
+    \bi
+      \item apply custom transformation
+      \item variable change
+      \item "sort" to block-diagonal form
+    \ei
+  \ei
 \newpage
 
 
-\titleboxx{I.3}{\Large Epsilon Form by \fuchsia}
+\titlea{A few words on \fuchsia}
+  \begin{itemize}
+    \item Based on the {\em Lee algorithm} \people{Lee '14}
+    \bi
+      \item support additional symbols
+      \item alternative implementation: \texttt{epsilon}
+    \ei
+    \item Open-Source and Free \people{Gituliar, Magerya '16 '17}
+    \bi
+       \item \url{http://github.com/gituliar/fuchsia}
+    \ei
+    \item Implemented in \texttt{Python}
+    \bi
+      \item \texttt{SageMath}
+      \item \texttt{Maxima}
+      \item \texttt{Maple} (optional)
+    \ei
+    \item Algorithm
+    \begin{enumerate}
+      \item {\bf Fuchsification} (Jordan form) \\
+        Get rid of apparent singularities
+      \item {\bf Normalization} (eigenvalues, eigenvectors) \\
+        Balance eigenvalues to $\alpha \x \eps$ form
+      \item {\bf Factorization} (solve linear equations) \\
+        Reduce to the epsilon form
+    \end{enumerate}
+  \end{itemize}
+\newpage
+
+\titlea{A few words on \fuchsia}
+\centerline{ \includegraphics[width=0.8\pagewidth]{img/matrix.png} }
+\newpage
+
+
+\titleb{Example 1}{Epsilon Form by \fuchsia}
 Let us introduce a new variable $y$, such that
 $$p^2 = -4m^2\frac{y^2}{1-y^2}$$%
 The new equations look as
@@ -305,8 +434,7 @@ The new equations look as
      \\
      \frac{\D F_2}{\D y} & = \frac{1-\eps}{y \x m^2} F_1 + \left( \frac{\eps}{1-y} - \frac{\eps}{1+y} - \frac{1}{y} \right) F_2
     \end{aligned}
-  $$
-
+  $$%
 With the help of \fuchsia we find a new basis $G_1$, $G_2$ given by the system
   $$
     \begin{aligned}
@@ -326,7 +454,7 @@ For this basis the differential equations are the epsilon form
 \newpage
 
 
-\titlebox{Solutions}
+\titlea{Solutions}
 We are looking for the solution of a given system of ordinary differential equations in the epsilon form
 $$
 \frac{\D G}{\D x} = \eps \x B(x) \x G
@@ -370,13 +498,12 @@ $$
 \newpage
 
 
-\titlebox{Solutions}
+\titlea{Solutions}
 
 My implementation of the solution algorithm, which I use to get results for the next slide.
 \vs
 
-\begin{Verbatim}[fontsize=\small,frame=lines, label=\fbox{Mathematica}]
-
+\begin{codeblock}
   SolveODE[m_, x_, ep_, n_, c_] := Module[
     {$i, $j, $n, $sol, $sol0, $sol1},
 
@@ -389,12 +516,11 @@ My implementation of the solution algorithm, which I use to get results for the 
     ];
     Sum[ep^$i*$sol[$i], {$i,0,n}]
   ];
-
-\end{Verbatim}
+\end{codeblock}
 \newpage
 
 
-\titleboxx{I.4}{\Large Solutions}
+\titleb{Example 1}{Solutions}
 \bi
   \item Master \#1
     $$ F_1(y,m^2) = \frac{4}{3}C_1^{(0)} +  \frac{4}{3}\left(C_1^{(1)}-C_1^{(0)}\right)\eps + \ldots $$
@@ -421,7 +547,7 @@ My implementation of the solution algorithm, which I use to get results for the 
 \newpage
 
 
-\titleboxx{I.5}{\Large Integration Constants \#1}
+\titleb{Example 1}{Integration Constants \#1}
     Master \#1 (from \fuchsia)
     $$ F_1(y,m^2) = \frac{4}{3}C_1^{(0)} +  \frac{4}{3}\left(C_1^{(1)}-C_1^{(0)}\right)\eps + \ldots $$
 
@@ -438,7 +564,7 @@ Result \#1
 \newpage
 
 
-\titleboxx{I.5}{\Large Integration Constants \#2}
+\titleb{Example 1}{Integration Constants \#2}
   Result \#1
     $$ C_1^{(0)} = \frac{m^2}{\eps} \quad C_1^{(1)} = \frac{m^2 \left(1- \gamma_E - \ln{m^2} \right)}{\eps}$$
 
@@ -471,18 +597,32 @@ This is in agreement with T.Riemann Monday's lecture!
 \newpage
 
 
-\titleboxx{Example I}{\Large \bf Conclusions}
+\titleb{Example 1}{Summary}
+We have seen how to
+\bi
+  \item generate IBP rules for a given graph
+  \item construct differential equations
+  \item find epsilon form
+  \item solve differential equations
+  \item find integration constants
+\ei
+
+\fbox{Exercies}
+\bi
+  \item using \litered choose some two-loop (massless and massive) propagator \\ and find corresponding masters
+  \item solve Example \#1, but using equations in $m^2$ (for help see Smirnov's book)
+\ei
+
 \newpage
 
 
-\titlebox{II.1 Splitting Functions from $e^+ e^-$-annihilation}
+\titleb{Example 2}{Splitting Functions from $e^+ e^-$-annihilation}
 In this example, I will show how to calculate a gluon-quark splitting function
 $$P_{gq} = \frac{1 + (1-x)^2}{x}$$%
 Using this technique you will be able to calculate remaining splitting functions $P_{qq}$, $P_{qg}$, and $P_{gg}$ as well as higher-order corrections to these quantities.
-
 \begin{center}
-\begin{axopicture}(320,80)
-  \SetScale{0.75}
+\begin{axopicture}(300,65)
+  \SetScale{0.65}
   \Line[arrow](60,50)(20,90)
   \Line[arrow](20,10)(60,50)
   \Vertex(60,50){2}
@@ -517,9 +657,8 @@ Using this technique you will be able to calculate remaining splitting functions
   \Text(170,10){$p_2$}
 \end{axopicture}
 \end{center}
-$$e^+(q_1) + e^-(q_2) \to q(p_1) + \bar{q}(p_2) + g(p_3)$$
-
-We employ a mass-factorization theorem 
+$$e^+(q_1) + e^-(q_2) \to q(p_1) + \bar{q}(p_2) + g(p_3)$$%
+Mass-factorization theorem 
 $$
  \frac{\D\sigma_i}{\D x} = \frac{P_{iq}}{\eps} + a_i + b_i \eps + \ldots
 $$%
@@ -530,7 +669,7 @@ $$
 \newpage
 
 
-\titlebox{II.2 Phase-Space Integrals}
+\titleb{Example 2}{Phase-Space Integrals}
 By their structure phase-space integrals are very similar to loop integrals (compare to the one-loop propagator from Example I), except that we apply on-shell conditions $\delta(p_i^2)$ to the cut lines as shown in the following {\bf cut graph}
 
 \begin{center}
@@ -565,23 +704,21 @@ $$ q_1 + q_2 = p_1 + p_2 + p_3 $$
 \newpage
 
 
-\titlebox{II.3 Integration-by-Parts}
+\titleb{Example 2}{Integration by Parts}
 
 In order to integrate the cross-section we need a new IBP basis. Let us define one as
 \vs
 
-\begin{Verbatim}[fontsize=\small,frame=lines, label=\fbox{Mathematica}]
-
-NewBasis[$a, {sp[p1], sp[p3], sp[q1+q2-p1-p3], s*x-2sp[q1+q2,p3], sp[p1,p3]},
-             {p1, p3}, Append -> True];
+\begin{codeblock}
+NewBasis[$a,{sp[p1], sp[p3], sp[q1+q2-p1-p3], s*x-2sp[q1+q2,p3], sp[p1,p3]},
+            {p1, p3}, Append -> True];
 
 GenerateIBP[$a];
 AnalyzeSectors[$a, {___,0,0}, CutDs -> {1,1,1,1,0,0,0}];
 FindSymmetries[];
 
 SolvejRules /@ UniqueSectors[$a];
-
-\end{Verbatim}
+\end{codeblock}
 \vs
 Note additional arguments in \code{AnalyzeSectors} routine:
 \bi
@@ -594,11 +731,10 @@ We get only one master integral
 $$
 F_1(x,\eps) = \int \D^n p_1 \delta(p_1^2) \x \D^n p_2 \delta(p_2^2) \x \D^n p_3 \delta(p_3^2) \x \delta\left(x-\frac{2 q\!\cdot\!p_3}{q^2}\right)
 $$
-
 \newpage
 
 
-\titlebox{Partial Fractioning}
+\titlea{Partial Fractioning}
 Given a set of denominators, being a {\em linear combination} of the kinematic invariants $s_{ij}$, make a partial fraction such that
 $$
   \frac{1}{D_1\ldots D_n} \to \frac{a_1}{D_2 \ldots D_n} +  \frac{a_2}{D_1 D_3 \ldots D_n} + \ldots + \frac{a_n}{D_1 \ldots D_{n-1}}
@@ -628,41 +764,38 @@ $$
 \newpage
 
 
-\titlebox{II.3 Integration-by-Parts}
-
+\titleb{Example 2}{IBP Reduction}
 Now we can convert the initial cross-section into the $j$-form and make IBP reduction.
-\begin{Verbatim}[fontsize=\small,frame=lines, label=\fbox{Mathematica}]
+\vs
 
-$PS2 = x / (sp[p1] sp[p3] sp[q1+q2-p1-p3] (s*x-2*sp[q1+q2,p3]));
+\begin{codeblock}
+M2 = (sp[p1,q1]^2+sp[p1,q2]^2+sp[p2,q1]^2+sp[p2,q2]^2)/(x*sp[q1,q2]*sp[p1,p3])
 
-$jM2 = Toj[$a, $PS2 $M2];
+PS2 = x / (sp[p1]*sp[p3]*sp[q1+q2-p1-p3]*(s*x-2*sp[q1+q2,p3]));
 
-$jM2 = $jM2 // IBPReduce
+jM2 = Toj[$a, PS2*M2];
 
-$Pgq = Series[$jM2 /. {m -> 4 - 2 eps}, {eps, 0, -1}]
+jM2 = jM2 // IBPReduce
 
-\end{Verbatim}
+Pgq = Series[jM2 /. {m -> 4-2*eps}, {eps, 0, -1}]
+\end{codeblock}
 \vs
 This gives us
 $$ P_{gq} \sim \frac{2-2x+x^2}{\color{red}x^2} \x F_1(x)  $$%
-which contains one $x$ factor more in the denominator.
+which contains one $x$ factor more in the denominator than we expect.
 
 \vs\vs
-Maybe $F_1(x) \sim x$? Let us check this\ldots
+Maybe $F_1(x) \sim x$? Let us check\ldots
 
 \newpage
 
 
-\titlebox{II.4 Differential Equations}
+\titleb{Example 2}{Differential Equations}
+\begin{codeblock}
+F1 = j[$a, 1, 1, 1, 1, 0, 0, 0];
 
-\vs
-\begin{Verbatim}[fontsize=\small,frame=lines, label=\fbox{Mathematica}]
-
-$F1 = j[$a, 1, 1, 1, 1, 0, 0, 0];
-
-$dF1 = Toj[$a, D[Fromj[$F1], x]] // IBPReduce;
-
-\end{Verbatim}
+dF1 = Toj[$a, D[Fromj[$F1], x]] // IBPReduce;
+\end{codeblock}
 \vs
 This code produces the following equation
 $$
@@ -677,12 +810,23 @@ which confirms our assumption from the previous slide.
 
 The final result is
 $$ \bbox{P_{gq} \sim \frac{2-2x+x^2}{x}}$$%
-
 \newpage
 
 
+\titleb{Example 2}{Summary}
+Now you also now how to calculate phase-space integrals.
 
-\titlebox{Holonomic Functions}
+\vs\vs
+\fbox{Exercise}\par
+Redefine $x$ as
+$$x = \frac{2\spr{q}{p_1}}{q^2}$$
+and find a well-known result
+$$ P_{qq} = \frac{1+x^2}{1-x} $$
+ for the quark-quark splitting function.
+\newpage
+
+
+\titlea{Holonomic Functions}
 A function $f=f(x)$ is called {\em holonomic} if there exist polynomials $a_n(x),\x\ldots,\x a_0(x)$ such that
 $$
   \label{eq:ode}
@@ -709,12 +853,9 @@ holds for all $x$. Hence, the holonomic function is uniquely defined by
   \item {\em Heun functions}
   \item and many others that have no name and no closed form
 \ei
-
-\vs\vs
-For more details, see the lecture by S.Moch at CAPP17 and  S.Kauers at CAPP11.
 \newpage
 
-\titlebox{Holonomic Functions}
+\titlea{Holonomic Functions}
 A function $f=f(x)$ is called {\em holonomic} if there exist polynomials $a_n(x),\x\ldots,\x a_0(x)$ such that
 $$
   a_n(x) f^{(n)} - a_{n-1}(x)\x f^{(n-1)} - \ldots - a_0(x) \x f = 0
@@ -725,18 +866,27 @@ holds for all $x$. Hence, the holonomic function is uniquely defined by
   \item a number of initial values $f(x_0),\x f'(x_0),\x \ldots,\x f^{(n-1)}(x_0)$
 \ei
 
-\vspace{1cm}
-\fbox{Conclusion}
+
 \vs
-\bn
-\item With the help of polynomials and differential equations we can define a large set of complicated functions which have no closed form and usually have a non-trivial integration representation.
-\item These functions appear in the Feynman integrals.
-\item In some situation it is much easier to solve ODE than to integrate directly.
-\en
+\underline{Conclusion}
+\bi
+  \item simple representation
+  \bi
+    \item polynomials
+    \item ordinary differential equations
+  \ei
+  \item define many complicated functions
+  \bi
+    \item no closed form
+    \item non-trivial integration representation
+  \ei
+  \item represent Feynman integrals
+  \item alternative for direct integration
+\ei
 \newpage
 
 
-\titlebox{$n^{\text{th}}$-order ODE vs $n\times n$ system}
+\titlea{Systems of ODE}
 
 We can easily rewrite a $n^{\text{th}}$-order linear ODE given by
 \be
@@ -744,9 +894,9 @@ We can easily rewrite a $n^{\text{th}}$-order linear ODE given by
   y^{(n)} - a_1(x)\x y^{(n-1)} - \ldots - a_n(x) \x y = 0
 \ee
 as an $n\times n$ system of the form 
-\be \frac{\D \bar{y}}{\D x} = A(x) \x \bar{y} \ee
+$$ \frac{\D \bar{y}}{\D x} = A(x) \x \bar{y} $$%
 where
-\be
+$$
 A(x) =
 \begin{bmatrix}
   0 & 1 & \cdots & 0 & 0
@@ -764,14 +914,14 @@ A(x) =
 \begin{pmatrix}
   y \\ y' \\ \vdots \\ y^{(n-2)} \\ y^{(n-1)}
  \end{pmatrix}
-\ee
+$$%
 However, the inverse opperation is not as easy anymore.
 \newpage
 
 
-\titleboxx{Example II}{Expansion of Hypergeometric Functions}
+\titlea{Expansion of Hypergeometric Functions}
 The Generalized Hypergeometric Function
-\be
+$$
  _{p+1}F_p
 \left(
 \begin{matrix}
@@ -784,47 +934,30 @@ The Generalized Hypergeometric Function
 =
 \prod_{i=1}^{p}\frac{\Gamma(b_i)}{\Gamma(a_i)\Gamma(b_i-a_i)}
 \int_0^1 \frac{t_i^{a_i-1} (1-t_i)^{b_i-a_i-1}}{(1-x\x t_1\ldots t_{p})^{a_{p+1}}} \D t_i
-\ee
+$$%
 is a solution to the differential equation
-\be
+$$
 \left[
  D \x (D+b_1-1)\x\cdots\x(D+b_p-1)\x - \x x\x(D+a_1)\x\cdots\x(D+a_{p+1})
 \right] \x y = 0
-\ee
+$$%
 where
 $$D = x\frac{\D}{\D x}$$
 
 \vs
-\fbox{Exercise 2.}
-Using your favourite CAS write a routine which for a given Generalized Hypergeometric Function, defined by the list $\{a_1,\ldots,a_{p+1},b_1,\ldots,b_p\}$, it returns a corresponding ODE, defined by the list $\{a_1(x),\ldots,a_p(x)\}$, in accordance with notation of eq.~\eqref{eq:ode}.
+\fbox{Exercise}\par
+Using your favourite CAS write a routine which for a given Generalized Hypergeometric Function, defined by the list $\{a_1,\ldots,a_{p+1},b_1,\ldots,b_p\}$, returns a corresponding ODE, defined by the list $\{a_1(x),\ldots,a_p(x)\}$, in accordance with notation of eq.~\eqref{eq:ode}.
 
 \newpage
 
 
-\titlebox{A Word of Advice}
-\bi
-  \item Before computing, first think of how to check your results
-  \item Read arXiv.org daily
-  \bi
-    \item subscribe to the mailing list
-    \item e-mail To: physics@arxiv.org, Subject: subscribe
-  \ei
-  \item Search with scholar.google.com
-  \item Do not be afraid to write e-mails
-  \item Discuss your ideas
-\ei
-\newpage
-
-\titlebox{Reading List}
-\bi \item {\em "Feynman Integral Calculus"} by V.~Smirnov
-    \item {\em "Lectures on Differential Equations for Feynman Integrals"} by J.~Henn
-    \item {\em "Formal Power Series and Linear Systems of Meromorphic Ordinary Differential Equations"} by W.~Balser
-    \item {\em "Computer Algebra in Particle Physics"} by S.~Weinzierl
-    \item {\em "Introduction to Loop Calculations"} by G.~Heinrich
-    \item {\em "Structure and Interpretation of Computer Programs"}\\by H.~Abelson and G.~Sussman with J.~Sussman
+\titlea{Reading List}
+\bi \item \people{Feynman Integral Calculus} by V.~Smirnov
+    \item \people{Lectures on Differential Equations for Feynman Integrals} by J.~Henn
+    \item \people{Formal Power Series and Linear Systems of \\ Meromorphic Ordinary Differential Equations} by W.~Balser
+    \item \people{Computer Algebra in Particle Physics} by S.~Weinzierl
+    \item \people{Introduction to Loop Calculations} by G.~Heinrich
+    \item \people{Structure and Interpretation of Computer Programs}\\by H.~Abelson and G.~Sussman with J.~Sussman
     \ei
-\newpage
-
-\titlebox{Summary}
 
 \end{document}

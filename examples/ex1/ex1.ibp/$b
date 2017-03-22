@@ -1,0 +1,67 @@
+BasisDirectory[$b] = StringDrop[DirectoryName[$Input], -1]
+$b /: BasisSectors[$b] := {js[$b, 0, 1], js[$b, 1, 0]}
+$b /: CutDs[$b] := {0, 0}
+$b /: Definitions[$b] := {Hold[MetricTensor[] === n, SetDim[n]], 
+   Hold[VecQ[l], Declare[l, Vector]], Hold[VecQ[p], Declare[p, Vector]]}
+$b /: Ds[$b] := {-m2 + sp[l, l], -m2 + sp[l - p, l - p]}
+$b /: EMs[$b] := {p}
+$b /: IBP[$b] := {-(#2*j[$b, -1 + #1, 1 + #2]) + 
+     (n - 2*#1 - #2)*j[$b, #1, #2] - 2*m2*#1*j[$b, 1 + #1, #2] - 
+     #2*j[$b, #1, 1 + #2]*(2*m2 - sp[p, p]), -(#2*j[$b, -1 + #1, 1 + #2]) + 
+     (-#1 + #2)*j[$b, #1, #2] + #1*j[$b, 1 + #1, -1 + #2] + 
+     #2*j[$b, #1, 1 + #2]*sp[p, p] - #1*j[$b, 1 + #1, #2]*sp[p, p]} & 
+$b /: Information[$b] := (If[ValueQ[$b::usage], 
+    Information[$b, LongForm -> False]]; 
+   Print[Grid[Partition[Union[Replace[Replace[First /@ UpValues[$b] /. 
+          HoldPattern -> HoldForm, 
+         {HoldPattern[HoldForm[(LiteRed`Private`f$_)[$b, __]]] :> 
+           HoldForm[LiteRed`Private`f$[$b, "\[Ellipsis]"]]}, {1}], 
+        {HoldPattern[LiteRed`Private`x$:HoldForm[(LiteRed`Private`f$_)[$b, 
+              ___]]] :> Button[LiteRed`Private`x$, 
+           (SelectionMove[ButtonNotebook[], All, GeneratedCell]; 
+             NotebookDelete[]; Information[Evaluate[LiteRed`Private`x$[[1,
+                0]]], LongForm -> False]; Print[TableForm[Cases[UpValues[$b], 
+                 HoldPattern[LiteRed`Private`a$_ :> LiteRed`Private`b$_] /; 
+                  MatchQ[LiteRed`Private`a$[[1,0]], LiteRed`Private`x$[[1,
+                    0]]]] /. HoldPattern -> HoldForm]]) & , 
+           Appearance -> "Frameless", BaseStyle -> "InformationLink"]}, 
+        {1}]], 5], DefaultBaseStyle -> "InfoGrid"]])
+$b /: jRules[$b, 0, 1] := Get[StringJoin[BasisDirectory[$b], 
+    "/jRules[$b, 0, 1]"]]
+$b /: jRules[$b, 1, 0] := {j[$b, (n1_)?Positive, (n2_)?NonPositive] /; 
+     True :> Expand[j[$b, n2, n1]]}
+$b /: jRules[$b, 1, 1] := Get[StringJoin[BasisDirectory[$b], 
+    "/jRules[$b, 1, 1]"]]
+$b /: jSymmetries[$b, 0, 1] := 
+  {{j[$b, (n1_)?NonPositive, (n2_)?Positive] /; True :> 
+     Expand[j[$b, 0, n2]/(-j[$b, -1, 0] + 2*j[$b, 0, -1] + 
+         2*j[$b, 0, 0]*sp[p, p])^n1]}, 
+   {j[$b, (n1_)?NonPositive, (n2_)?Positive] /; True :> 
+     Expand[j[$b, n1, n2]]}}
+$b /: jSymmetries[$b, 1, 1] := 
+  {{j[$b, (n1_)?Positive, (n2_)?Positive] /; True :> Expand[j[$b, n1, n2]]}, 
+   {j[$b, (n1_)?Positive, (n2_)?Positive] /; True :> Expand[j[$b, n2, n1]]}}
+$b /: LI[$b] := {} & 
+$b /: LMs[$b] := {l}
+$b /: MappedSectors[$b] := {js[$b, 1, 0]}
+$b /: MIs[$b] := {j[$b, 0, 1], j[$b, 1, 1]}
+$b /: NonZeroSectors[$b] := {js[$b, 0, 1], js[$b, 1, 0], js[$b, 1, 1]}
+$b /: SimpleSectors[$b] := {js[$b, 0, 1], js[$b, 1, 0]}
+$b /: SPs[$b] := {sp[l, l], sp[l, p]}
+$b /: SR[$b] := Module[{LiteRed`Private`jsc$ = jSector[j[$b, ##1]]}, 
+    If[MemberQ[UniqueSectors[$b], LiteRed`Private`jsc$], 
+     DeleteCases[DeleteDuplicates[Collectj[j[$b, ##1] - 
+         (j[$b, ##1] /. jSymmetries @@ LiteRed`Private`jsc$)]], 0], {}]] & 
+$b /: Toj[$b] := {sp[l, l] -> m2 + j[$b, -1, 0], 
+   sp[l, p] -> (j[$b, -1, 0] - j[$b, 0, -1] + sp[p, p])/2}
+$b /: UniqueSectors[$b] := {js[$b, 0, 1], js[$b, 1, 1]}
+$b /: ZerojRule[$b] := LiteRed`Private`jjj:j[$b, __] :> 
+   0 /; Module[{LiteRed`Private`jjs = 
+       Rest[List @@ jSector[LiteRed`Private`jjj]]}, 
+     Or @@ (BitOr[LiteRed`Private`jjs, #1] === #1 & ) /@ {{0, 0}}]
+$b /: ZeroSectors[$b] := {js[$b, 0, 0]}
+$b::usage = "1-loop basis with 1 external momenta.\nUse Information[$b] to \
+get basis summary.\nThis string can be redefined by setting \
+$b::usage=\"\[Ellipsis]\""; Information[$b, LongForm -> False]; 
+LiteRed`Private`CheckDefs[$b]
+BasisDirectory[$b]

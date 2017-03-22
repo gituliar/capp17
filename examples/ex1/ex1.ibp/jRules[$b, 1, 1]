@@ -1,0 +1,10 @@
+{j[$b, (n1_)?Positive, (n2_)?Positive] /; n2 != 1 -> 
+  (-2*m2*n1*j[$b, 1 + n1, -2 + n2])/((-1 + n2)*(4*m2 - sp[p, p])*sp[p, p]) + 
+   (j[$b, -1 + n1, n2]*(2*m2 - sp[p, p]))/((4*m2 - sp[p, p])*sp[p, p]) + 
+   (j[$b, n1, -1 + n2]*(2*m2 + 2*m2*n1 - 2*m2*n2 + sp[p, p] + n*sp[p, p] - 
+      2*n1*sp[p, p] - n2*sp[p, p]))/((-1 + n2)*(4*m2 - sp[p, p])*sp[p, p]), 
+ j[$b, (n1_)?Positive, (n2_)?Positive] /; n1 != 1 -> 
+  (-2*m2*n2*j[$b, -2 + n1, 1 + n2])/((-1 + n1)*(4*m2 - sp[p, p])*sp[p, p]) + 
+   (j[$b, n1, -1 + n2]*(2*m2 - sp[p, p]))/((4*m2 - sp[p, p])*sp[p, p]) + 
+   (j[$b, -1 + n1, n2]*(2*m2 - 2*m2*n1 + 2*m2*n2 + sp[p, p] + n*sp[p, p] - 
+      n1*sp[p, p] - 2*n2*sp[p, p]))/((-1 + n1)*(4*m2 - sp[p, p])*sp[p, p])}
