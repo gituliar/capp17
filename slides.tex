@@ -77,7 +77,7 @@
   \vfill
   {\LARGE \bf \scshape Introduction \\ \Large to \LARGE \\ Differential Equations \\ \Large for \LARGE \\ Feynman Integrals \\}
   \vfill
-  {\large Oleksandr Gituliar} \\ \href{mailto:oleksandr@gituliar.net}{oleksandr@gituliar.net}
+  {\large Oleksandr Gituliar} \\ \href{http://gituliar.net/capp17}{http://gituliar.net/capp17}
   \vfill
   \includegraphics[height=1.2cm]{img/logo_uhh}\\
   II. Institut f\"ur Theoretische Physik \\ Universit\"at Hamburg
@@ -96,6 +96,7 @@ Feynman Integrals Calculus --- became in recent decades a science on its own.
   \begin{equation*}
     \int {\color{Black}\underbrace{ \color{NavyBlue}\D^d l_1 \ldots \D^d l_n}_{\text{loops}}} \,\, 
          {\color{Black}\underbrace{\color{Green} \D^d p_1 \delta(p_1^2) \ldots \D^d p_m \delta(p_m^2)}_{\text{legs}}} \,\, \frac{1}{D_1^{n_1} \ldots D_k^{n_k}}
+         \qquad n_i \in Z
   \end{equation*}
     {\em Numerical methods}
     \bi
@@ -127,6 +128,7 @@ Feynman Integrals Calculus --- became in recent decades a science on its own.
   \begin{equation*}
     \int {\color{Black}\underbrace{ \color{NavyBlue}\D^d l_1 \ldots \D^d l_n}_{\text{loops}}} \,\, 
          {\color{Black}\underbrace{\color{Green} \D^d p_1 \delta(p_1^2) \ldots \D^d p_m \delta(p_m^2)}_{\text{legs}}} \,\, \frac{1}{D_1^{n_1} \ldots D_k^{n_k}}
+         \qquad n_i \in Z
   \end{equation*}
  \boxed{\text{Integration-By-Parts}} reduction
  \bi
@@ -159,20 +161,21 @@ Feynman Integrals Calculus --- became in recent decades a science on its own.
 \vs
 You will learn:
 \bi
-  \item Integration-by-Parts Reduction
+  \item \people{Integration-by-Parts} Reduction
   \bi
     \item \litered
   \ei
-  \item Differential Equations in Epsilon Form
+  \item Differential Equations in \people{Epsilon Form}
   \bi
     \item \fuchsia
   \ei
-  \item Simple examples
+  \item \people{Examples}
   \bn
     \item One-Loop Integral
     \item Two-Loop Phase-Space Integral
   \en
-  \item Other tricks
+  \item \people{Partial Fractioning}
+  \item Expansion of \people{Hypergeometric Functions}
 \ei
 \newpage
 
@@ -330,7 +333,7 @@ Derive another system of differential equations, but this time in~$m^2$.\\
 \newpage
 
 
-\titlea{Epsilon Form}
+\titlea{I. Epsilon Form}
 \bi
   \item Classical Notation
 $$
@@ -368,7 +371,7 @@ Hence, it is very important to make this task automatic.
 \newpage
 
 
-\titlea{A few words on \fuchsia}
+\titlea{II. A few words on \fuchsia}
   {\bf Input}
   \bi
     \item System of Ordinary Differential Equations $A(x,\eps,\ldots)$, i.e.,
@@ -390,7 +393,7 @@ Hence, it is very important to make this task automatic.
 \newpage
 
 
-\titlea{A few words on \fuchsia}
+\titlea{II. A few words on \fuchsia}
   \begin{itemize}
     \item Based on the {\em Lee algorithm} \people{Lee '14}
     \bi
@@ -419,7 +422,7 @@ Hence, it is very important to make this task automatic.
   \end{itemize}
 \newpage
 
-\titlea{A few words on \fuchsia}
+\titlea{II. A few words on \fuchsia}
 \centerline{ \includegraphics[width=0.8\pagewidth]{img/matrix.png} }
 \newpage
 
@@ -454,7 +457,7 @@ For this basis the differential equations are the epsilon form
 \newpage
 
 
-\titlea{Solutions}
+\titlea{III. Solutions}
 We are looking for the solution of a given system of ordinary differential equations in the epsilon form
 $$
 \frac{\D G}{\D x} = \eps \x B(x) \x G
@@ -498,7 +501,7 @@ $$
 \newpage
 
 
-\titlea{Solutions}
+\titlea{III. Solutions}
 
 My implementation of the solution algorithm, which I use to get results for the next slide.
 \vs
@@ -734,7 +737,7 @@ $$
 \newpage
 
 
-\titlea{Partial Fractioning}
+\titlea{IV. Partial Fractioning}
 Given a set of denominators, being a {\em linear combination} of the kinematic invariants $s_{ij}$, make a partial fraction such that
 $$
   \frac{1}{D_1\ldots D_n} \to \frac{a_1}{D_2 \ldots D_n} +  \frac{a_2}{D_1 D_3 \ldots D_n} + \ldots + \frac{a_n}{D_1 \ldots D_{n-1}}
@@ -826,7 +829,7 @@ $$ P_{qq} = \frac{1+x^2}{1-x} $$
 \newpage
 
 
-\titlea{Holonomic Functions}
+\titlea{V. Holonomic Functions}
 A function $f=f(x)$ is called {\em holonomic} if there exist polynomials $a_n(x),\x\ldots,\x a_0(x)$ such that
 $$
   \label{eq:ode}
@@ -855,7 +858,7 @@ holds for all $x$. Hence, the holonomic function is uniquely defined by
 \ei
 \newpage
 
-\titlea{Holonomic Functions}
+\titlea{V. Holonomic Functions}
 A function $f=f(x)$ is called {\em holonomic} if there exist polynomials $a_n(x),\x\ldots,\x a_0(x)$ such that
 $$
   a_n(x) f^{(n)} - a_{n-1}(x)\x f^{(n-1)} - \ldots - a_0(x) \x f = 0
@@ -886,7 +889,7 @@ holds for all $x$. Hence, the holonomic function is uniquely defined by
 \newpage
 
 
-\titlea{Systems of ODE}
+\titlea{V. Holonomic Functions}
 
 We can easily rewrite a $n^{\text{th}}$-order linear ODE given by
 \be
@@ -919,7 +922,7 @@ However, the inverse opperation is not as easy anymore.
 \newpage
 
 
-\titlea{Expansion of Hypergeometric Functions}
+\titlea{VI. Hypergeometric Functions}
 The Generalized Hypergeometric Function
 $$
  _{p+1}F_p
